@@ -28,7 +28,7 @@ int numCoins;
 float view_x; 
 float view_y; 
 int levelNum;
-int temp=0; 
+int liveCount = 3; 
  
 void setup() {
   size(800, 600); 
@@ -43,6 +43,7 @@ void setup() {
   numCoins = 0; 
   isGameOver = false;
   levelNum = 1;
+  p.lives = 3; 
   
   gold = loadImage("gold1.png");
   spider = loadImage("spider_walk_right1.png"); 
@@ -71,7 +72,6 @@ void setup2() {
   numCoins = 10; 
   isGameOver = false;
   levelNum = 2; 
-  p.lives = temp; 
    
   gold = loadImage("gold1.png");
   spider = loadImage("spider_walk_right1.png"); 
@@ -84,6 +84,7 @@ void setup2() {
     
   view_x = 0; 
   view_y = 0;
+  draw(); 
   //println(enemy==null);
   
 }
@@ -111,7 +112,7 @@ void displayAll(){
   fill(255, 0, 0); 
   textSize(32); 
   text("Coin:" + numCoins, view_x + 50, view_y + 50); 
-  text("Lives:" + p.lives, view_x + 50, view_y + 100); 
+  text("Lives:" + liveCount, view_x + 50, view_y + 100); 
   text("Level:" + levelNum, view_x + 50, view_y + 150);
   
   enemy.display(); 
@@ -119,12 +120,12 @@ void displayAll(){
   
   if(isGameOver){
     fill(0,0,255);
-    text("GAME OVER:", view_x + width/2 - 100, view_y + height/2 - 150); 
+    text("GAME OVER:", view_x + width/2 - 100, view_y + height/2 - 250); 
     if (p.lives == 0)
-      text("You lose!", view_x + width/2 - 100, view_y + height/2 - 100); 
+      text("You lose!", view_x + width/2 - 100, view_y + height/2 - 200); 
     else if (p.lives > 0) 
-      text("You win!", view_x + width/2 - 100, view_y + height/2 - 100); 
-    text("Press SPACE to restart!", view_x + width/2 - 100, view_y + height/2 - 50); 
+      text("You win!", view_x + width/2 - 100, view_y + height/2 - 200); 
+    text("Press SPACE to restart!", view_x + width/2 - 100, view_y + height/2 - 150); 
   }
 }
 
@@ -146,7 +147,7 @@ void checkDeath(){
   boolean fallOffCliff = p.getBottom() > GROUND_LEVEL; 
   if(collideEnemy || fallOffCliff){
     p.lives--;
-    temp = p.lives; 
+    liveCount--; 
     if(p.lives == 0) {
       isGameOver = true;
     } else {
@@ -165,10 +166,10 @@ void collectCoins(){
     }
   }
   
-  if(coins.size() == 0 && numCoins == 10)
+  if(coins.size() == 0 && numCoins == 10){
     setup2(); 
-  else if (coins.size() == 0)
-    setup();
+    p.lives = liveCount; 
+  }
   
   if(numCoins == 20)
     isGameOver = true; 
